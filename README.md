@@ -22,7 +22,7 @@ It's recommended to have this running in a `tmux` session so it can run in the b
 1. Install `tmux` using Homebrew: `brew install tmux`
 
 > [!TIP]
-> If you don't have the `brew` package manager installed, please install it [here](https://brew.sh/).
+> If you don't have the `brew` package manager installed, please install it [here](https://brew.sh/)
 
 2. Start a `tmux` session: `tmux new-session -s mysession`
 
