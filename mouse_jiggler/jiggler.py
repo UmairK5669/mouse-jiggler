@@ -5,9 +5,9 @@ import pyautogui
 import pync
 from pync import Notifier
 
-def executable():
+jiggler_running = False
 
-    jiggler_running = False
+def executable():
 
     def mouse_jiggler_function(movement_distance=5, interval=0.5):
         global jiggler_running
