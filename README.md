@@ -13,12 +13,32 @@ Heard enough and wanna get started? Read the [easiest setup method](https://gith
 
 This project is available to download through Python's package manager; `pip`
 
+We will be running this in a `tmux` session to ensure the program can run in the background without issues
+
+1. Ensuring Python and `tmux` are installed
+
+Install the `brew` package manager [here](https://brew.sh/)
+
+Once installed, run `brew install Python` to install Python, then `brew install tmux` to install tmux 
+
 > [!TIP]
-> Ensure you have Python installed already, if you do not, install the `brew` package manager [here](https://brew.sh/), then run `brew install python`
+> If this causes any errors in regards to not being able to find brew, refer to the homebrew official documentation [here](https://docs.brew.sh/Installation)
 
-Open terminal and write `pip3 install mouse-jiggler-macos`, once installed simply type `jiggler` and you will be ready to go!
+2. Start a `tmux` session with: `tmux new-session -s mysession`
 
-See [this](https://github.com/UmairK5669/mouse-jiggler/blob/main/README.md#using-tmux) section for running jiggler in a Tmux session to ensure your mouse-jiggler is always available. 
+      Replace `mysession` with your desired session name
+
+3. Run `pip3 install mouse-jiggler-macos` to install the mouse-jiggler package
+
+4. Once installed, simply run `jiggler` and you are good-to-go!
+
+> [!TIP]
+> Verify installation correctly by pressing `cmd+shift+u` to start the jiggler, you should see a notification in the top-right corner (Remember `cmd+shift+k` to turn off)
+
+Close the terminal, if it says "terminate session" that is okay! Terminating the `tmux` session won't close the program
+
+> [!CAUTION]
+> If your computer sleeps, the program will still be running however, if the computer shuts down the program will unfortunately end. You will have restore the `tmux` session manually which can be done by doing steps 2 and 4 again. 
 
 ### Not-so-simple setup method
 
@@ -30,8 +50,6 @@ See [this](https://github.com/UmairK5669/mouse-jiggler/blob/main/README.md#using
 4. Run the program: `python3 jiggler.py`
 
 ### Using Tmux
-
-It's recommended to have this running in a `tmux` session so it can run in the background without issues. 
 
 #### Steps for using Tmux in Terminal
 
