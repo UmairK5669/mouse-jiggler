@@ -2,6 +2,7 @@ import threading
 import time
 from pynput import keyboard
 import pyautogui
+import random
 import pync
 from pync import Notifier
 
@@ -14,26 +15,20 @@ def executable():
         screen_width, screen_height = pyautogui.size()
 
         # Initial delay with periodic checks to allow immediate stopping
-        for _ in range(20):
+        for _ in range(7):
             if not jiggler_running:
                 return
             time.sleep(1)
 
         if not jiggler_running:
             return
-        
-        pync.notify(
-            title='Jiggler', 
-            message='In 10 seconds Jiggler will center, click and start jiggling!', 
-            sound='default'
-        )
 
-        for _ in range(5):
+        for _ in range(3):
             if not jiggler_running:
                 return
             time.sleep(1)
         
-        for remaining in range(5, 0, -1):
+        for remaining in range(3, 0, -1):
             if not jiggler_running:
                 return
             Notifier.notify(f'Time remaining: {remaining} seconds', title='Jiggler')
@@ -50,11 +45,10 @@ def executable():
         pyautogui.click()
 
         while jiggler_running:
-            pyautogui.moveRel(movement_distance, 0, duration=0.25)  # Move right
-            pyautogui.moveRel(0, movement_distance, duration=0.25)  # Move up
-            time.sleep(interval)
-            pyautogui.moveRel(-movement_distance, 0, duration=0.25)  # Move left
-            pyautogui.moveRel(0, -movement_distance, duration=0.25)  # Move down
+            random_distance_x = random.randint(-movement_distance, movement_distance)
+            random_distance_y = random.randint(-movement_distance, movement_distance)
+
+            pyautogui.moveRel(random_distance_x, random_distance_y, duration=0.25)
             time.sleep(interval)
 
     def start_jiggler():
@@ -64,7 +58,7 @@ def executable():
             threading.Thread(target=mouse_jiggler_function).start()
             pync.notify(
                 title='Jiggler', 
-                message='Mouse Jiggler is running, it will start in 30 seconds', 
+                message='In 10 seconds Jiggler will center, click and start jiggling!', 
                 sound='default'
             )
         else:
