@@ -10,7 +10,7 @@ jiggler_running = False
 
 def executable():
 
-    def mouse_jiggler_function(movement_distance=5, interval=0.5):
+    def mouse_jiggler_function(movement_distance=10, interval=0.5):
         global jiggler_running
         screen_width, screen_height = pyautogui.size()
 
