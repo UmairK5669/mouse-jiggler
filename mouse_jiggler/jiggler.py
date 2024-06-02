@@ -8,13 +8,15 @@ from pync import Notifier
 
 jiggler_running = False
 manual_movement_detected = False
+movement_threshold = 10  # Threshold for detecting manual movement
 
 def executable():
 
-    def mouse_jiggler_function(movement_distance=12, interval=0.5):
+    def mouse_jiggler_function(movement_distance=10, interval=0.5):
         global jiggler_running, manual_movement_detected
         screen_width, screen_height = pyautogui.size()
 
+        # Initial delay with periodic checks to allow immediate stopping
         for _ in range(7):
             if not jiggler_running:
                 return
@@ -48,20 +50,23 @@ def executable():
 
         while jiggler_running:
             current_mouse_pos = pyautogui.position()
-            if current_mouse_pos != last_mouse_pos:
+            distance_moved = ((current_mouse_pos[0] - last_mouse_pos[0])**2 + (current_mouse_pos[1] - last_mouse_pos[1])**2)**0.5
+
+            if distance_moved > movement_threshold:
                 manual_movement_detected = True
                 last_mouse_pos = current_mouse_pos
-                time.sleep(0.5)  
+                time.sleep(0.5)  # Delay before checking again to avoid constant toggling
                 continue
 
             if manual_movement_detected:
                 manual_movement_detected = False
-                time.sleep(1)  
+                time.sleep(1)  # Give some time before resuming jiggling
 
             random_distance_x = random.randint(-movement_distance, movement_distance)
             random_distance_y = random.randint(-movement_distance, movement_distance)
 
             pyautogui.moveRel(random_distance_x, random_distance_y, duration=0.25)
+            last_mouse_pos = pyautogui.position()  # Update last_mouse_pos after jiggler movement
             time.sleep(interval)
 
     def start_jiggler():
