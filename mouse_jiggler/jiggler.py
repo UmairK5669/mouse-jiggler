@@ -1,20 +1,20 @@
 import threading
 import time
-from pynput import keyboard
+from pynput import keyboard, mouse
 import pyautogui
 import random
 import pync
 from pync import Notifier
 
 jiggler_running = False
+manual_movement_detected = False
 
 def executable():
 
-    def mouse_jiggler_function(movement_distance=10, interval=0.5):
-        global jiggler_running
+    def mouse_jiggler_function(movement_distance=12, interval=0.5):
+        global jiggler_running, manual_movement_detected
         screen_width, screen_height = pyautogui.size()
 
-        # Initial delay with periodic checks to allow immediate stopping
         for _ in range(7):
             if not jiggler_running:
                 return
@@ -44,7 +44,20 @@ def executable():
         pyautogui.moveTo(screen_width / 2, screen_height / 2)
         pyautogui.click()
 
+        last_mouse_pos = pyautogui.position()
+
         while jiggler_running:
+            current_mouse_pos = pyautogui.position()
+            if current_mouse_pos != last_mouse_pos:
+                manual_movement_detected = True
+                last_mouse_pos = current_mouse_pos
+                time.sleep(0.5)  
+                continue
+
+            if manual_movement_detected:
+                manual_movement_detected = False
+                time.sleep(1)  
+
             random_distance_x = random.randint(-movement_distance, movement_distance)
             random_distance_y = random.randint(-movement_distance, movement_distance)
 

@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="mouse_jiggler_macos",
-    version="0.4.0",
+    version="0.5.0",
     author="Umair Khan",
     author_email="u7khan@uwaterloo.ca",
     description="A simple mouse jiggler for MacOS",
