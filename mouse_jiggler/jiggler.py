@@ -16,6 +16,9 @@ def executable():
         global jiggler_running, manual_movement_detected
         screen_width, screen_height = pyautogui.size()
 
+        # Prevent movement near borders
+        border_offset = 175
+
         # Initial delay with periodic checks to allow immediate stopping
         for _ in range(7):
             if not jiggler_running:
@@ -42,7 +45,8 @@ def executable():
         Notifier.notify('Jiggler Starting Now', title='Jiggler')
 
         time.sleep(1)
-        
+
+        # Move the mouse to the center with border restrictions
         pyautogui.moveTo(screen_width / 2, screen_height / 2)
         pyautogui.click()
 
@@ -55,25 +59,57 @@ def executable():
             if distance_moved > movement_threshold:
                 manual_movement_detected = True
                 last_mouse_pos = current_mouse_pos
-                time.sleep(0.5)  # Delay before checking again to avoid constant toggling
+                time.sleep(1)  # Delay before checking again to avoid constant toggling
                 continue
 
             if manual_movement_detected:
                 manual_movement_detected = False
-                time.sleep(1)  # Give some time before resuming jiggling
+                time.sleep(3)  # Give some time before resuming jiggling
 
+            # Constrain mouse movement within borders
             random_distance_x = random.randint(-movement_distance, movement_distance)
             random_distance_y = random.randint(-movement_distance, movement_distance)
 
-            pyautogui.moveRel(random_distance_x, random_distance_y, duration=0.25)
+            new_x = max(border_offset, min(screen_width - border_offset, last_mouse_pos[0] + random_distance_x))
+            new_y = max(border_offset, min(screen_height - border_offset, last_mouse_pos[1] + random_distance_y))
+
+            pyautogui.moveTo(new_x, new_y, duration=0.25)
             last_mouse_pos = pyautogui.position()  # Update last_mouse_pos after jiggler movement
             time.sleep(interval)
+
+    def press_random_keys():
+        while jiggler_running:
+            # Randomly press Cmd + '+' and Cmd + '-' after intervals
+            num_plus_presses = random.randint(0, 3)
+            interval_between_plus = random.randint(60, 300)  # 1 to 5 minutes
+            print(num_plus_presses, interval_between_plus)
+
+            time.sleep(interval_between_plus)  # Wait before pressing Cmd + '+'
+            for _ in range(num_plus_presses):
+                pyautogui.hotkey('command', '+')
+                time.sleep(0.2)
+
+            time.sleep(random.randint(0, 180))  # Wait between 0 to 3 minutes before Cmd + '-'
+            for _ in range(num_plus_presses):
+                pyautogui.hotkey('command', '-')
+                time.sleep(0.2)
+
+            # Press Shift at random intervals
+            shift_interval = random.randint(60, 300)  # 1 to 5 minutes
+            time.sleep(shift_interval)
+            pyautogui.press('shift')
+
+            # Press Delete at random intervals
+            delete_interval = random.randint(60, 300)  # 1 to 5 minutes
+            time.sleep(delete_interval)
+            pyautogui.press('delete')
 
     def start_jiggler():
         global jiggler_running
         if not jiggler_running:
             jiggler_running = True
             threading.Thread(target=mouse_jiggler_function).start()
+            threading.Thread(target=press_random_keys).start()
             pync.notify(
                 title='Jiggler', 
                 message='In 10 seconds Jiggler will center, click and start jiggling!', 
